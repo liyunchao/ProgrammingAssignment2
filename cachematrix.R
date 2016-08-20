@@ -1,15 +1,32 @@
-## Put comments here that give an overall description of what your
-## functions do
+## New matrix structure with cached Matrix inversion
 
-## Write a short comment describing this function
+## create a cache matrix
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    m.inversion <- NULL
+    set <- function(y) {
+          x <<- y
+          m.inversion <<- NULL
+    }
+  get <- function() x
+  set.Inversion <- function(m.i) m.inversion <<- m.i
+  get.Inversion <- function() m.inversion
+  list(set = set, get = get, set.Inversion = set.Inversion, get.Inversion = get.Inversion)
 }
 
 
-## Write a short comment describing this function
+## cache matrix inversion
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    inver <- x$get.Inversion()
+    
+    if(!is.null(inver))    {
+      message("getting cached matrix inversion")
+      return (inver)
+    }
+    
+    data <- x$get()
+    inver <- solve(data)
+    x$set.Inversion(inver)
+    inver
 }
